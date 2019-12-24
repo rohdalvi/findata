@@ -4,6 +4,7 @@ import dash_html_components as html
 from getData import databaseSetUp
 import sqlite3
 import requests
+import plotly.graph_objs as go
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -14,41 +15,55 @@ colors = {
     'text': '#7FDBFF'
 }
 
-def acquireData():
-    cur, conn = databaseSetUp('AVdata.db')
-    cur.execute("SELECT time FROM stockData")
-    x = cur.fetchall()
 
-    cur.execute("SELECT closingPrice FROM stockData")
-    y = cur.fetchall()
+cur, conn = databaseSetUp('AVdata.db')
+cur.execute("SELECT time FROM stockData")
+x_data = cur.fetchall()
+x1 = []
+for i in x_data:
+    x1.append(i[0])
 
-    return x,y
+cur.execute("SELECT closingPrice FROM stockData")
+y_data = cur.fetchall()
+y1 = []
+for i in y_data:
+    y1.append(i[0])
 
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
-    html.H1(children='Hello Dash', 
+    html.H1(children='stockData', 
         style={
             'textAlign': 'center',
             'color': colors['text']
         }
     ),
 
-    html.Div(children='Dash: A web application framework for Python.', style={
+    html.Div(children='Built with Dash and Python.', style={
         'textAlign': 'center',
-        'color': colors['text']
+        'color': colors['text'],
     }),
 
     dcc.Graph(
         id='example-graph',
         figure={
             'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'bar', 'name': u'Montréal'},
+                go.Scatter(
+                    x=x1,
+                    y=y1,
+                    mode = 'markers+lines',
+                    marker = dict(
+                        color= colors['text']
+                    )
+                    
+                ) 
             ],
-            'layout': {
-                'plot_bgcolor': colors['background'],
-                'paper_bgcolor': colors['background'],
-                'title': 'Dash Data Visualization'
-            }
+            'layout': go.Layout(
+                title= 'AAPL Price Visualization',
+                plot_bgcolor= colors['background'],
+                paper_bgcolor= colors['background'], 
+                font= {
+                    'color': colors['text']
+                }
+            )
         }
     )
 ])
