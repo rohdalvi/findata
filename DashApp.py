@@ -7,13 +7,13 @@ import requests
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = ['https://codepen.io/amyoshino/pen/jzXypZ.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 colors = {
-    'background': '#111111',
-    'text': '#7FDBFF'
+    'background': '#002A38',
+    'text': '#00CED1'  
 }
 
 
@@ -40,49 +40,62 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
         }
     ),
 
-    html.Div(children='Built with Dash and Python.', style={
-        'textAlign': 'center',
-        'color': colors['text'],
-    }),
+    html.Div([
+        html.Div([
+            html.Div(children='Built with Dash and Python.', style={
+                'textAlign': 'center',
+                'color': colors['text'],
+            }),
+        ])
+    ], className='row'),
 
-    html.Div(children=[
-        dcc.Input(id='my-id', value='initial value', type='text', style = {
-        'textAlign': 'center',
-        'float' : 'center',
-        'display' : 'inline-block'
-    }),
+    html.Div([
+        html.Div(children=[
+            dcc.Input(id='my-id', value='initial value', type='text', style = {
+            'textAlign': 'center',
+            'background-color': '#FFF8DC',
+        }, className = 'one column offset-by-one column'),     
+    ], className='row'),
 
-    html.Div(id='my-div', style = {
-        'textAlign': 'center',
-        'color' : colors['text'],
-        'fontSize' : 24 
-        }
-        )
-    ]),
-
-    dcc.Graph(
-        id='example-graph',
-        figure={
-            'data': [
-                go.Scatter(
-                    x=x1,
-                    y=y1,
-                    mode = 'markers+lines',
-                    marker = dict(
-                        color= colors['text']
-                    )
-                    
-                ) 
-            ],
-            'layout': go.Layout(
-                plot_bgcolor= colors['background'],
-                paper_bgcolor= colors['background'], 
-                font= {
-                    'color': colors['text']
-                }
+    html.Div([
+        html.Div(id='my-div', style = {
+            'textAlign': 'center',
+            'color' : colors['text'],
+            'fontSize' : 24 
+            }
             )
-        }
-    ),
+        ]),
+
+        dcc.Graph(
+            id='example-graph',
+            figure={
+                'data': [
+                    go.Scatter(
+                        x=x1,
+                        y=y1,
+                        mode = 'markers+lines',
+                        marker = dict(
+                            color= colors['text']
+                        )
+                        
+                    ) 
+                ],
+                'layout': go.Layout(
+                    plot_bgcolor= colors['background'],
+                    paper_bgcolor= colors['background'], 
+                    font= {
+                        'color': colors['text']
+                    },
+                    xaxis=dict(
+                        gridcolor= '#459894'
+                    ),
+                    yaxis=dict(
+                        gridcolor= '#459894'
+                    )
+                )
+            }
+        )
+     ], className = "row")
 
 ])
 
