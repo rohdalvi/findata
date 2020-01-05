@@ -26,20 +26,24 @@ def getAVdata(symbol, interval):
 
     return relevant_data_dict
 
-def createDatabase(relevant_data_dict, cur, conn):
-    cur.execute("DROP TABLE IF EXISTS stockData")
-    cur.execute("CREATE TABLE stockData (time TEXT PRIMARY KEY, closingPrice FLOAT)")
+def createDatabase(name, relevant_data_dict, cur, conn):
+    cur.execute("DROP TABLE IF EXISTS %s" % (name,))
+    cur.execute("CREATE TABLE %s (time TEXT PRIMARY KEY, closingPrice FLOAT)" % (name,))
 
     for time in relevant_data_dict:
         closingPrice = relevant_data_dict[time]['4. close']
-        cur.execute("INSERT INTO stockData (time, closingPrice) VALUES (?,?)",(time, closingPrice))
+        cur.execute("INSERT INTO %s (time, closingPrice) VALUES (?,?)" %(name,) ,(time, closingPrice))
 
     conn.commit()
 
 def main():
     cur, conn = databaseSetUp('AVdata.db')
     data = getAVdata("AAPL", "60min")
-    createDatabase(data, cur, conn)
+    name = "AAPL_Table"
+    createDatabase(name, data, cur, conn)
+    data = getAVdata("MSFT", "60min")
+    name = "MSFT_Table"
+    createDatabase(name, data, cur, conn)
     print("Finished!")
 
 if __name__ == "__main__":
